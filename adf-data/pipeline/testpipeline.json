@@ -5,6 +5,7 @@
 		"activities": [
 			{
 				"name": "testvar",
+				"description": "test variables modified in my dev branch.",
 				"type": "AppendVariable",
 				"dependsOn": [],
 				"userProperties": [],
