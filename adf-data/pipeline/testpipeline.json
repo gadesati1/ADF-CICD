@@ -2,6 +2,14 @@
 	"name": "testpipeline",
 	"properties": {
 		"description": "testpipeline",
+		"activities": [
+			{
+				"name": "testvar",
+				"type": "AppendVariable",
+				"dependsOn": [],
+				"userProperties": []
+			}
+		],
 		"variables": {
 			"env": {
 				"type": "String",
