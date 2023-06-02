@@ -1,5 +1,7 @@
 # Sample YAML file to validate and export an ARM template into a build artifact
 
+name: $(SourceBranchName)_$(Date:yyyy-MM-dd)$(Rev:.r)
+
 trigger:
  branches:
   include:
