@@ -1,0 +1,13 @@
+{
+	"name": "testpipeline",
+	"properties": {
+		"description": "testpipeline",
+		"variables": {
+			"env": {
+				"type": "String",
+				"defaultValue": "dev"
+			}
+		},
+		"annotations": []
+	}
+}
