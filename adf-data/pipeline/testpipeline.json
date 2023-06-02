@@ -7,13 +7,20 @@
 				"name": "testvar",
 				"type": "AppendVariable",
 				"dependsOn": [],
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "testvar",
+					"value": "envdev"
+				}
 			}
 		],
 		"variables": {
 			"env": {
 				"type": "String",
 				"defaultValue": "dev"
+			},
+			"testvar": {
+				"type": "Array"
 			}
 		},
 		"annotations": []
