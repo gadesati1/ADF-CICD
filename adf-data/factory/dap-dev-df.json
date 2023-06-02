@@ -1,0 +1,9 @@
+{
+	"name": "dap-dev-df",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "1095d4c0-8ef5-4383-99ec-800c5422a5eb",
+		"tenantId": "354ffbfb-e376-41b5-9059-522f3cdf73be"
+	}
+}
