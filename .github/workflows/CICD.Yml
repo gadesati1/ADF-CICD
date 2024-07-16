@@ -1,0 +1,40 @@
+name: adf-ci-cd
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Azure Login
+      uses: Azure/login@v1.4.3
+      with:
+        # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: npm install
+      working-directory: ${{ github.workspace }}
+      run: npm install
+      
+    - name: Validate ADF  
+      run:   'run build validate ${{ github.workspace }}/adf-data /subscriptions/$SUBSCRIPTION/resourceGroups/$RESOURCEGROUP/providers/Microsoft.DataFactory/factories/$ADFINSTANCE'
+    - name: Validate and Generate ARM template
+      if: github.ref == 'refs/heads/main'
+      run: 'run build export ${{ github.workspace }}/adf-data /subscriptions/$SUBSCRIPTION/resourceGroups/$RESOURCEGROUP/providers/Microsoft.DataFactory/factories/$ADFINSTANCE "ArmTemplate"'
+    - uses: actions/upload-artifact@v3
+      with:
+        name: Publish Artifacts
+        path: ${{ github.workspace }}/ArmTemplate    
