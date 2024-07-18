@@ -35,10 +35,10 @@ jobs:
       run: npm install
       
     - name: Validate ADF  
-      run:   'run build validate ${{ github.workspace }}/adf-data /subscriptions/${{ vars.SUBSCRIPTION }}/resourceGroups/${{ vars.RESOURCEGROUP }}/providers/Microsoft.DataFactory/factories/${{ vars.ADFINSTANCE}}'
+      run:   'npm run build validate ${{ github.workspace }}/adf-data /subscriptions/${{ vars.SUBSCRIPTION }}/resourceGroups/${{ vars.RESOURCEGROUP }}/providers/Microsoft.DataFactory/factories/${{ vars.ADFINSTANCE}}'
     - name: Validate and Generate ARM template
       if: github.ref == 'refs/heads/main'
-      run: 'run build export ${{ github.workspace }}/adf-data /subscriptions/${{ vars.SUBSCRIPTION }}/resourceGroups/${{ vars.RESOURCEGROUP }}/providers/Microsoft.DataFactory/factories/${{ vars.ADFINSTANCE}} "ArmTemplate"'
+      run: 'npm run build export ${{ github.workspace }}/adf-data /subscriptions/${{ vars.SUBSCRIPTION }}/resourceGroups/${{ vars.RESOURCEGROUP }}/providers/Microsoft.DataFactory/factories/${{ vars.ADFINSTANCE}} "ArmTemplate"'
     - uses: actions/upload-artifact@v3
       with:
         name: Publish Artifacts
