@@ -42,8 +42,9 @@ jobs:
       working-directory: ${{ github.workspace }}
       run: 'npm run build export ${{ github.workspace }}/adf-data /subscriptions/${{ vars.SUBSCRIPTION }}/resourceGroups/${{ vars.RESOURCEGROUP }}/providers/Microsoft.DataFactory/factories/${{ vars.ADFINSTANCE}} "ArmTemplate"'
     - uses: actions/upload-artifact@v3
+      name: Publish Artifacts
       with:
-        name: Publish Artifacts
+        name: Armtemplates
         path: ${{ github.workspace }}/ArmTemplate    
 
   deploy:
@@ -61,6 +62,8 @@ jobs:
     steps:
     - name: Download a Build Artifact
       uses: actions/download-artifact@v4.1.8
+      with:
+       name: Armtemplates
       
     - name: Azure Login
       uses: Azure/login@v1
