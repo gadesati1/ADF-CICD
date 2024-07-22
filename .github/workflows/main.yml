@@ -45,3 +45,45 @@ jobs:
       with:
         name: Publish Artifacts
         path: ${{ github.workspace }}/ArmTemplate    
+
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      ARM_TEMPLATE_FILE: ${{ github.workspace }}/ArmTemplate/ARMTemplateForFactory.json
+    strategy:
+      matrix:
+        stage: ['Dev', 'QA']
+      fail-fast: true
+      max-parallel: 1
+    environment:
+      name: ${{ matrix.stage }}
+      
+    steps:
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v4.1.8
+      
+    - name: Azure Login
+      uses: Azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        enable-AzPSSession: true 
+
+    #Disable Triggers
+    - name: Run Pre-deployment script
+      shell: pwsh
+      run: pwsh -command "./PrePostDeploymentScript.ps1 -armTemplate ${{ env.ARM_TEMPLATE_FILE }}  -ResourceGroupName ${{ vars.RESOURCEGROUP }} -DataFactoryName ${{ vars.ADFINSTANCE }} -predeployment $true -deleteDeployment $false"
+      
+    - name: Deploy ADF ARM Templates ${{ matrix.stage }}
+      uses: Azure/arm-deploy@v1
+      with:
+        scope: 'resourcegroup'
+        resourceGroupName: ${{ vars.RESOURCEGROUP }}
+        template: ${{ env.ARM_TEMPLATE_FILE }}
+        deploymentMode: Incremental
+        parameters: 
+          factoryName=${{ vars.ADFINSTANCE }}
+    
+    #Enable Triggers
+    - name: Run Post-deployment script
+      shell: pwsh
+      run: pwsh -command "./PrePostDeploymentScript.ps1 -armTemplate ${{ env.ARM_TEMPLATE_FILE }} -ResourceGroupName ${{ vars.RESOURCEGROUP }} -DataFactoryName ${{ vars.ADFINSTANCE }} -predeployment $false -deleteDeployment $true"
