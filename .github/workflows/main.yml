@@ -67,9 +67,11 @@ jobs:
 
     #Disable Triggers
     - name: Run Pre-deployment script
-      shell: pwsh
-      run: pwsh -command "${{ github.workspace }}/ArmTemplate/PrePostDeploymentScript.ps1 -armTemplate ${{ env.ARM_TEMPLATE_FILE }}  -ResourceGroupName ${{ vars.RESOURCEGROUP }} -DataFactoryName ${{ vars.ADFINSTANCE }} -predeployment 1 -deleteDeployment 0"
-      
+      uses: azure/powershell@v2
+      with:
+        inlineScript: ${{ github.workspace }}/ArmTemplate/PrePostDeploymentScript.ps1 -armTemplate ${{ env.ARM_TEMPLATE_FILE }}  -ResourceGroupName ${{ vars.RESOURCEGROUP }} -DataFactoryName ${{ vars.ADFINSTANCE }} -predeployment $true -deleteDeployment $false
+        azPSVersion: "latest"  
+
     - name: Deploy ADF ARM Templates to Development
       uses: Azure/arm-deploy@v1
       with:
@@ -82,8 +84,10 @@ jobs:
     
     #Enable Triggers
     - name: Run Post-deployment script
-      shell: pwsh
-      run: pwsh -command "${{ github.workspace }}/ArmTemplate/PrePostDeploymentScript.ps1 -armTemplate ${{ env.ARM_TEMPLATE_FILE }} -ResourceGroupName ${{ vars.RESOURCEGROUP }} -DataFactoryName ${{ vars.ADFINSTANCE }} -predeployment 0 -deleteDeployment 1"
+      uses: azure/powershell@v2
+      with:
+        inlineScript: ${{ github.workspace }}/ArmTemplate/PrePostDeploymentScript.ps1 -armTemplate ${{ env.ARM_TEMPLATE_FILE }}  -ResourceGroupName ${{ vars.RESOURCEGROUP }} -DataFactoryName ${{ vars.ADFINSTANCE }} -predeployment $false -deleteDeployment $true
+        azPSVersion: "latest"
 
   deploy-to-PROD:
     runs-on: ubuntu-latest
@@ -108,9 +112,11 @@ jobs:
 
     #Disable Triggers
     - name: Run Pre-deployment script
-      shell: pwsh
-      run: pwsh -command "${{ github.workspace }}/ArmTemplate/PrePostDeploymentScript.ps1 -armTemplate ${{ env.ARM_TEMPLATE_FILE }}  -ResourceGroupName ${{ vars.RESOURCEGROUP }} -DataFactoryName ${{ vars.ADFINSTANCE }} -predeployment 1 -deleteDeployment 0"
-      
+      uses: azure/powershell@v2
+      with:
+        inlineScript: ${{ github.workspace }}/ArmTemplate/PrePostDeploymentScript.ps1 -armTemplate ${{ env.ARM_TEMPLATE_FILE }}  -ResourceGroupName ${{ vars.RESOURCEGROUP }} -DataFactoryName ${{ vars.ADFINSTANCE }} -predeployment $true -deleteDeployment $false
+        azPSVersion: "latest"
+
     - name: Deploy ADF ARM Templates Production
       uses: Azure/arm-deploy@v1
       with:
@@ -123,5 +129,7 @@ jobs:
     
     #Enable Triggers
     - name: Run Post-deployment script
-      shell: pwsh
-      run: pwsh -command "${{ github.workspace }}/ArmTemplate/PrePostDeploymentScript.ps1 -armTemplate ${{ env.ARM_TEMPLATE_FILE }} -ResourceGroupName ${{ vars.RESOURCEGROUP }} -DataFactoryName ${{ vars.ADFINSTANCE }} -predeployment 0 -deleteDeployment 1"
+      uses: azure/powershell@v2
+      with:
+        inlineScript: ${{ github.workspace }}/ArmTemplate/PrePostDeploymentScript.ps1 -armTemplate ${{ env.ARM_TEMPLATE_FILE }}  -ResourceGroupName ${{ vars.RESOURCEGROUP }} -DataFactoryName ${{ vars.ADFINSTANCE }} -predeployment $false -deleteDeployment $true
+        azPSVersion: "latest"
